@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>El Faro - Periódico</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Contador de artículos
+      var articleCount = $(".article-grid > div").length;
+      $(".article-counter").text("Artículos: " + articleCount);
+
+// Carga dinámica de contenidos
+      $.ajax({
+        url: "noticias.json",
+        dataType: "json",
+        success: function(data) {
+          data.forEach(function(noticia) {
+            var newArticle = `
+              <div class="column is-one-third">
+                <h3 class="title is-size-4">${noticia.title}</h3>
+                <p class="subtitle is-size-5">${noticia.email}</p>
+                <p>${noticia.description}</p>
+              </div>
+            `;
+            $(".article-grid").append(newArticle);
+          });
+        },
+        error: function() {
+          console.log("Error al cargar las noticias.");
+        }
+      });
+
+
+      // Agregar nuevo artículo
+      $("form#add-article").submit(function(event) {
+        event.preventDefault();
+        var title = $(this).find('input[name="title"]').val();
+        var email = $(this).find('input[name="email"]').val();
+        var description = $(this).find('textarea[name="description"]').val();
+        
+        var newArticle = `
+          <div class="card">
+            <div class="card-content">
+              <h3 class="title is-4">${title}</h3>
+              <p class="subtitle is-6">${email}</p>
+              <p>${description}</p>
+            </div>
+          </div>
+        `;
+        
+        $(".article-grid").append(newArticle);
+        articleCount++;
+        $(".article-counter").text("Artículos: " + articleCount);
+        
+        // Limpiar campos del formulario
+        $(this).find('input[name="title"]').val("");
+        $(this).find('input[name="email"]').val("");
+        $(this).find('textarea[name="description"]').val("");
+      });
+
+      // Mostrar fecha y hora actualizada
+      function updateDateTime() {
+        var now = new Date();
+        var dateString = now.toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' });
+        var timeString = now.toLocaleTimeString("es-ES", { hour: 'numeric', minute: 'numeric', second: 'numeric' });
+        $("header .datetime").text(dateString + " - " + timeString);
+      }
+
+     setInterval(updateDateTime, 1000); // Actualizar cada segundo
+
+      // Registrar cuenta de cliente
+      $("form#register-form").submit(function(event) {
+        event.preventDefault();
+        var username = $(this).find('input[name="username"]').val();
+        var password = $(this).find('input[name="password"]').val();
+
+       
+        // Limpiar campos del formulario
+        $(this).find('input[name="username"]').val("");
+        $(this).find('input[name="password"]').val("");
+
+        // Mostrar mensaje de éxito
+        $(".registration-message").text("¡Cuenta registrada con éxito!");
+      });
+
+      // Acceder como cliente
+      $("form#login-form").submit(function(event) {
+        event.preventDefault();
+        var username = $(this).find('input[name="username"]').val();
+        var password = $(this).find('input[name="password"]').val();
+
+   
+        // Limpiar campos del formulario
+        $(this).find('input[name="username"]').val("");
+        $(this).find('input[name="password"]').val("");
+
+        // Mostrar mensaje de éxito o error
+        if (username === "cliente" && password === "1234") {
+          $(".login-message").text("¡Acceso concedido! Bienvenido, " + username + ".");
+        } else {
+          $(".login-message").text("Error de acceso. Por favor, verifica tus credenciales.");
+        }
+      });
+    });
+    
+     
+    
+  // Resaltar sección actual
+    $(document).ready(function() {
+  // Obtener la URL actual
+  var currentURL = window.location.href;
+
+  // Obtener el elemento de la barra lateral correspondiente a la URL actual
+  var $currentNavItem = $('.navbar-item[href="' + currentURL + '"]');
+  
+  // Agregar la clase "current" al elemento encontrado
+  $currentNavItem.addClass('current');
+});
+  </script>
+</head>
+<body>
+
+  <!-- Barra lateral -->
+  <aside class="sidebar">
+    <div class="columns is-mobile is-vcentered">
+      <div class="column is-narrow">
+        <a href="index.html">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+      </div>
+      <div class="column">
+        <a class="navbar-item" href="index.html">Inicio</a>
+      </div>
+    </div>
+    <hr class="navbar-divider">
+
+    <a class="navbar-item" href="nacional.html">Nacional</a>
+    <a class="navbar-item" href="internacional.html">Internacional</a>
+
+    <hr class="navbar-divider">
+
+    <a class="navbar-item" href="economia.html">Economía</a>
+    <a class="navbar-item" href="deportes.html">Deportes</a>
+
+    <hr class="navbar-divider">
+  <a class="navbar-item" href="contacto.html">Contacto</a>
+  <a class="navbar-item current" href="registro.html">Registro</a>
+    <br><br>
+    <div class="menu">
+      <p class="menu-label">
+        Notas
+      </p>
+      <br>
+      <ul class="menu-list">
+        <li>
+          <a href="#" onclick="cargarContenido('Contenido de la nota 1.')">
+            <h4 class="title is-6">Nota 1</h4>
+            <p>Contenido de la nota 1.</p>
+          </a>
+        </li>
+        <li>
+          <a href="#" onclick="cargarContenido('Contenido de la nota 2.')">
+            <h4 class="title is-6">Nota 2</h4>
+            <p>Contenido de la nota 2.</p>
+          </a>
+        </li>
+        <li>
+          <a href="#" onclick="cargarContenido('Contenido de la nota 3.')">
+            <h4 class="title is-6">Nota 3</h4>
+            <p>Contenido de la nota 3.</p>
+          </a>
+        </li>
+        <li>
+          <a href="#" onclick="cargarContenido('Contenido de la nota 4.')">
+            <h4 class="title is-6">Nota 4</h4>
+            <p>Contenido de la nota 4.</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Contenido principal -->
+  <div class="content">
+  
+  <!-- Portada -->
+  <header class="has-text-centered">
+    <h1 class="title is-size-1">Periódico El Faro</h1>
+    <div class="subtitle is-size-4 datetime"></div>
+    <a href="index.html"> <img src="https://img.freepik.com/vector-gratis/faro-boceto-icono-arte-decoracion-ondas-espiral-bombilla-vector-ilustracion_460848-14799.jpg?w=2000&t=st=1685293613~exp=1685294213~hmac=046a5f9534b7276c4bf0fb84a43daee5db0886dc6fc66e994fb704427650c649" alt="Logo de El Faro" width="300" height="300">
+    </a>
+  </header>
+
+   <!-- Barra de avisos -->
+<section class="hero is-danger">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Avisos importantes
+      </h1>
+      <h2 class="subtitle">
+        ¡Descuentos de verano en la tienda en línea! Aprovecha nuestras ofertas exclusivas.
+      </h2>
+    </div>
+  </div>
+</section>
+
+ 
+  
+  <!-- Formulario de registro de cuentas -->
+    <section class="section">
+      <div class="container">
+        <h2 class="title is-size-2">Registro de Cuentas</h2>
+        <form id="register-form">
+          <div class="field">
+            <label class="label">Usuario</label>
+            <div class="control">
+              <input class="input" type="text" name="username" placeholder="Usuario" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Contraseña</label>
+            <div class="control">
+              <input class="input" type="password" name="password" placeholder="Contraseña" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button class="button is-primary" type="submit">Registrar Cuenta</button>
+            </div>
+          </div>
+        </form>
+        <p class="registration-message"></p>
+      </div>
+    </section>
+
+    <!-- Formulario de acceso de clientes -->
+    <section class="section">
+      <div class="container">
+        <h2 class="title is-size-2">Acceso de Clientes</h2>
+        <form id="login-form">
+          <div class="field">
+            <label class="label">Usuario</label>
+            <div class="control">
+              <input class="input" type="text" name="username" placeholder="Usuario" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Contraseña</label>
+            <div class="control">
+              <input class="input" type="password" name="password" placeholder="Contraseña" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button class="button is-primary" type="submit">Acceder</button>
+            </div>
+          </div>
+        </form>
+        <p class="login-message"></p>
+      </div>
+    </section>
+    
+    <section class="section">
+     <div class="container">
+        <h2 class="title is-size-7">Usuario: cliente</h2>
+        <h2 class="title is-size-7">Contraseña: 1234</h2>
+     </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="is-centered">Derechos de autor &copy; 2023 El Faro</p>
+    </footer>
+  </div>
+</body>
+</html>

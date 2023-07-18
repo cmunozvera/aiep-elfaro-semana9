@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>El Faro - Periódico</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Contador de artículos
+      var articleCount = $(".article-grid > div").length;
+      $(".article-counter").text("Artículos: " + articleCount);
+
+// Carga dinámica de contenidos
+      $.ajax({
+        url: "noticias.json",
+        dataType: "json",
+        success: function(data) {
+          data.forEach(function(noticia) {
+            var newArticle = `
+              <div class="column is-one-third">
+                <h3 class="title is-size-4">${noticia.title}</h3>
+                <p class="subtitle is-size-5">${noticia.category}</p>
+                <p>${noticia.description}</p>
+              </div>
+            `;
+            $(".article-grid").append(newArticle);
+          });
+        },
+        error: function() {
+          console.log("Error al cargar las noticias.");
+        }
+      });
+
+
+      // Agregar nuevo artículo
+      $("form#add-article").submit(function(event) {
+        event.preventDefault();
+        var title = $(this).find('input[name="title"]').val();
+        var category = $(this).find('input[name="category"]').val();
+		var description = $(this).find('textarea[name="description"]').val();
+
+      // Validación simple para verificar que los campos no estén vacíos
+      if (title && category && description) {
+        // Agregar el nuevo artículo al contenedor
+        var newArticle = `
+          <div class="column is-one-third">
+            <h3 class="title is-size-4">${title}</h3>
+            <p class="subtitle is-size-5">${category}</p>
+            <p>${description}</p>
+          </div>
+        `;
+        $(".article-grid").append(newArticle);
+        articleCount++;
+        $(".article-counter").text("Artículos: " + articleCount);
+
+        // Mostrar el mensaje de éxito
+        $("#success-message").fadeIn().delay(3000).fadeOut();
+        
+        // Limpiar campos del formulario
+        $(this).find('input[name="title"]').val("");
+        $(this).find('input[name="category"]').val("");
+        $(this).find('textarea[name="description"]').val("");
+      } else {
+        // En caso de campos vacíos, se podría mostrar un mensaje de error aquí
+        console.log("Completa todos los campos antes de agregar la noticia.");
+      }
+    });
+
+      // Mostrar fecha y hora actualizada
+      function updateDateTime() {
+        var now = new Date();
+        var dateString = now.toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' });
+        var timeString = now.toLocaleTimeString("es-ES", { hour: 'numeric', minute: 'numeric', second: 'numeric' });
+        $("header .datetime").text(dateString + " - " + timeString);
+      }
+
+      setInterval(updateDateTime, 1000); // Actualizar cada segundo
+    });
+    
+    
+  // Resaltar sección actual
+    $(document).ready(function() {
+  // Obtener la URL actual
+  var currentURL = window.location.href;
+
+  // Obtener el elemento de la barra lateral correspondiente a la URL actual
+  var $currentNavItem = $('.navbar-item[href="' + currentURL + '"]');
+  
+  // Agregar la clase "current" al elemento encontrado
+  $currentNavItem.addClass('current');
+});
+
+  </script>
+  
+  
+</head>
+<body>
+
+
+<!-- Barra lateral -->
+<aside class="sidebar">
+  <div class="columns is-mobile is-vcentered">
+    <div class="column is-narrow">
+      <a href="index.html">
+        <span class="icon">
+          <i class="fas fa-home"></i>
+        </span>
+      </a>
+    </div>
+    <div class="column">
+      <a class="navbar-item current" href="index.html">Inicio</a>
+    </div>
+  </div>
+  <hr class="navbar-divider">
+  
+  <a class="navbar-item" href="nacional.html">Nacional</a>
+  <a class="navbar-item" href="internacional.html">Internacional</a>
+  
+  </a>
+  <hr class="navbar-divider">
+  
+  <a class="navbar-item" href="economia.html">Economia</a>
+  <a class="navbar-item" href="deportes.html">Deportes</a>
+  
+    <hr class="navbar-divider">
+  <a class="navbar-item" href="contacto.html">Contacto</a>
+  <a class="navbar-item" href="registro.html">Registro</a>
+
+<br><br>
+  <div class="menu">
+    <p class="menu-label">
+      Notas
+    </p>
+    <br>
+    <ul class="menu-list">
+      <li>
+        <a href="#">
+          <h4 class="title is-6">Nota 1</h4>
+          <p>Contenido de la nota 1.</p>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <h4 class="title is-6">Nota 2</h4>
+          <p>Contenido de la nota 2.</p>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <h4 class="title is-6">Nota 3</h4>
+          <p>Contenido de la nota 3.</p>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <h4 class="title is-6">Nota 4</h4>
+          <p>Contenido de la nota 4.</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+</aside>
+
+<!-- Contenido principal -->
+<div class="content">
+
+
+
+  <!-- Portada -->
+  <header class="has-text-centered">
+    <h1 class="title is-size-1">Periódico El Faro</h1>
+    <div class="subtitle is-size-4 datetime"></div>
+    <a href="index.html"> <img src="https://img.freepik.com/vector-gratis/faro-boceto-icono-arte-decoracion-ondas-espiral-bombilla-vector-ilustracion_460848-14799.jpg?w=2000&t=st=1685293613~exp=1685294213~hmac=046a5f9534b7276c4bf0fb84a43daee5db0886dc6fc66e994fb704427650c649" alt="Logo de El Faro" width="300" height="300">
+    </a>
+  </header>
+
+<!-- Barra de avisos -->
+<section class="hero is-danger">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Avisos importantes
+      </h1>
+      <h2 class="subtitle">
+        ¡Descuentos de verano en la tienda en línea! Aprovecha nuestras ofertas exclusivas.
+      </h2>
+    </div>
+  </div>
+</section>
+
+  <!-- Sección de artículos de noticias -->
+<section class="section">
+    <div class="container">
+      <h2 class="title is-size-2">Agregar Nuevas Noticias</h2>
+      
+      <!-- Agregamos un div para mostrar el mensaje de éxito -->
+      <div class="notification is-success" style="display:none" id="success-message">
+        Noticia agregada exitosamente.
+       </div>
+      <div class="columns article-grid">
+        <!-- Aquí se cargarán las noticias -->
+      </div>
+      <form id="add-article">
+        <div class="field">
+          <label class="label">Título</label>
+          <div class="control">
+            <input class="input" type="text" name="title" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Categoría</label>
+          <div class="control">
+            <input class="input" type="text" name="category" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Descripción</label>
+          <div class="control">
+            <textarea class="textarea" name="description" required></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-primary" type="submit">Agregar Noticia</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+<!-- Nueva sección destacada -->
+<h2 class="title is-size-2">Artículos Destacados</h2>
+
+<br>
+
+<div class="columns is-multiline">
+  <div class="column is-one-third">
+    <div class="card">
+      <div class="card-content">
+        <h3 class="title is-size-4">Articulo4</h3>
+        <p class="subtitle is-size-5">Categoría</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ac diam non risus vestibulum pellentesque. Nulla sem diam, sodales eu elit id, sagittis gravida augue. Proin vitae imperdiet metus, eu molestie ipsum. Maecenas elit nisl, facilisis quis elementum non, aliquet et nulla. Ut justo justo, ultricies vel malesuada nec, luctus tristique risus. Donec posuere porttitor dolor id posuere.</p>
+      </div>
+    </div>
+  </div>
+  <div class="column is-one-third">
+    <div class="card">
+      <div class="card-content">
+        <h3 class="title is-size-4">Articulo5</h3>
+        <p class="subtitle is-size-5">Categoría</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ac diam non risus vestibulum pellentesque. Nulla sem diam, sodales eu elit id, sagittis gravida augue. Proin vitae imperdiet metus, eu molestie ipsum. Maecenas elit nisl, facilisis quis elementum non, aliquet et nulla. Ut justo justo, ultricies vel malesuada nec, luctus tristique risus. Donec posuere porttitor dolor id posuere.</p>
+      </div>
+    </div>
+  </div>
+  <div class="column is-one-third">
+    <div class="card">
+      <div class="card-content">
+        <h3 class="title is-size-4">Articulo6</h3>
+        <p class="subtitle is-size-5">Categoría</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ac diam non risus vestibulum pellentesque. Nulla sem diam, sodales eu elit id, sagittis gravida augue. Proin vitae imperdiet metus, eu molestie ipsum. Maecenas elit nisl, facilisis quis elementum non, aliquet et nulla. Ut justo justo, ultricies vel malesuada nec, luctus tristique risus. Donec posuere porttitor dolor id posuere.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Video -->
+<section class="section">
+  <div class="container">
+      <h2 class="title is-size-3">Video</h2>
+      <div class="columns is-centered">
+        <div class="card">
+          <div class="card-content has-text-centered">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/JA4RrYZJIpM" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+      <br>
+
+      <!-- Audio -->
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3">Audio</h2>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="card">
+          <div class="card-content has-text-centered">
+            <div class="card-content">
+              <audio controls>
+                <source src="Meganoticias Cortina Musical_320kbps.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+              </audio>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+   
+
+
+<!-- Footer -->
+<footer class="footer">
+     <p class="is-centered">Derechos de autor &copy; 2023 El Faro</p>
+</footer>
+
+</body>
+</html>

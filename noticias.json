@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Título de la noticia 1",
+    "category": "Categoría de la noticia 1",
+    "description": "Descripción de la noticia 1"
+  },
+  {
+    "title": "Título de la noticia 2",
+    "category": "Categoría de la noticia 2",
+    "description": "Descripción de la noticia 2"
+  },
+  ...
+  
+  $(document).ready(function() {
+  // Obtener la URL actual
+  var currentURL = window.location.href;
+
+  // Obtener el elemento de la barra lateral correspondiente a la URL actual
+  var $currentNavItem = $('.navbar-item[href="' + currentURL + '"]');
+  
+  // Agregar la clase "current" al elemento encontrado
+  $currentNavItem.addClass('current');
+});
+]
+
+
